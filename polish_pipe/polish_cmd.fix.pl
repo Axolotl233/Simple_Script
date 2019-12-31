@@ -1,9 +1,9 @@
 #! perl
 
-BEGIN {
-    my $module = "/data/00/user/user112/perl5/lib/perl5";
-    unshift(@INC, $module);
-}
+#BEGIN {
+#    my $module = "/data/00/user/user112/perl5/lib/perl5";
+#    unshift(@INC, $module);
+#}
 
 use warnings;
 use strict;
