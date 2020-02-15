@@ -158,7 +158,7 @@ sub print_help{
       
       Options:
       --config    giving the config file with all needed things.
-      --o   directory of out file:
+      --out_dir   directory of out file:
 
 USAGE
 
