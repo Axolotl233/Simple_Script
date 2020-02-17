@@ -14,7 +14,7 @@ use PerlIO::gzip;
 2:only called in several samples (default=0.2)
 3:DP range (default 2 and 50)
 4:SNP site in range 5 bp (default) of INDEL 
-5:SNP site in repeat region(can't use it yet)
+5:SNP site in repeat region
 
 =cut
 sub print_help{
