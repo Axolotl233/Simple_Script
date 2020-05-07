@@ -11,25 +11,19 @@ use List::Util qw (sum max min);
 MCE::Hobo->init(
     max_workers => '10',
 );
-
 $[ = 1;
 
 my $file = $ARGV[0];
-
 my @len;
 
 my $count =`grep -c '>' $file`;
-
-
 my $seqIO = MCE::Shared -> share ({ module => 'Bio::SeqIO'}, -file => $file, -format => "fasta", -alphabet => "dna");
 
 for my $hoboID (1 .. $count) {
     my $ref = MCE::Hobo->new( \&parallel_reader, $hoboID, $seqIO );
     push @len,$ref->join();
 }
-
 MCE::Hobo->waitall();
-
 
 my $contig = scalar(@len);
 print "contig_num\t$contig\n";
