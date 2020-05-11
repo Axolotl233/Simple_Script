@@ -6,4 +6,4 @@ perl *gff ConvertRepeatMasker2gff.pl
 #bedtools merge -i All.repeat.bed > All.repeat.merge.bed
 
 main algorithm of script may be still have bugs
-sometimes the res is no equal when use HASH keys method, but very similar(99.9%)
+sometimes the res is no equal Ture value when used HASH keys method, but very similar(99.9%)
