@@ -1,4 +1,4 @@
-perl Util/TypeBed.pl
+perl Util/TypeBed.pl > All.repeat.type.sort.bed
 perl Util/SplitBed.pl All.repeat.type.sort.bed
 perl Util/CreatRepeatChart.pl $theadnum > RepeatStatistic.txt
 perl Util/RateRepeat.pl $genome_size RepeatStatistic.txt
