@@ -11,7 +11,7 @@ MCE::Loop::init {chunk_size => 1,max_workers => $thread_mce,};
 
 my @files = grep {/.txt/} `find ./split_bed`;
 chomp $_ for @files;
-print "contig\tRepeatMasker\tRepeatModeler\tRepeatProteinMasker\tTotal\n";
+print "contig\tRepeatMasker\tRepeatModeler\tRepeatProteinMasker\tTRF\tTotal\n";
 
 mce_loop{ &run($_) } @files;
 
@@ -33,6 +33,9 @@ sub run {
         }elsif($line[3] =~ /RepeatProteinMask/){
             push @{$h{RepeatProteinMask}{$count}},($line[1],$line[2]);
             $count += 1;
+        }elsif($line[3] =~ /TRF/){
+            push @{$h{TRF}{$count}},($line[1],$line[2]);
+            $count += 1;
         }
     }
     close $fileIN;
@@ -40,7 +43,8 @@ sub run {
     my %t;
     my @p =(1,2);
     my @tmp;
-    push @tmp,$name; 
+    push @tmp,$name;
+    #map {print $_."\n"} sort keys %h;exit;
     for my $method (sort keys %h){
         my $ref = \%{$h{$method}};
         %t = (%{$h{$method}},%t);
