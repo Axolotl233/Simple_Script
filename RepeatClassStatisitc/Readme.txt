@@ -1,4 +1,4 @@
-Statistic result from RepeatMasker,RepeatModeler,RepeatProteinMasker
+Statistic result from RepeatMasker,RepeatModeler,RepeatProteinMasker and Trf
 
 perl *gff ConvertRepeatMasker2gff.pl
 
