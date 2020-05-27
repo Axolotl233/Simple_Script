@@ -7,3 +7,6 @@ perl *gff ConvertRepeatMasker2gff.pl
 
 main algorithm of script do not have bugs anymore
 it have been tested the res is equal Ture value when used HASH keys method, (100%)
+
+perl path/to/0.GetPipeline.pl 1 $threads $genome_size
+perl path/to/0.GetPipeline.pl 2 $threads $genome_size $repeat_size
