@@ -16,9 +16,10 @@ if($s eq "1"){
     print S1 "perl $Bin/Util/CreatRepeatChart.pl $t > RepeatStatistic.txt\n";
     print S1 "perl $Bin/Util/RateRepeat.pl $g RepeatStatistic.txt\n";
 
+    close S1;
 }
 
-if ($s == "2"){
+if ($s eq "2"){
     open S2,'>',"0.step2.sh";
 
     my $t = $ARGV[1];
@@ -27,4 +28,6 @@ if ($s == "2"){
     print S2 "perl $Bin/Util/SplitGff3.pl ./\n";
     print S2 "perl $Bin/Util/ClassStatisticByContig.pl $t\n";
     print S2 "perl $Bin/Util/MergeClassRes.pl $g $r\n";
+    
+    close S2;
 }
