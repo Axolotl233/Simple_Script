@@ -20,16 +20,15 @@ sub run {
     open my $fileIN,'<',$file;
     my %h;
     my %box;
+    @{$h{RepeatMasker}{0}} = (1,0);
+    @{$h{RepeatProteinMask}{0}} = (1,0);
+    @{$h{RepeatModeler}{0}} = (1,0);
+    @{$h{TRF}{0}} = (1,0);
     my $count = 1;
     while(<$fileIN>){
 
         chomp;
         my @line = split/\t/;
-
-        @{$h{RepeatMasker}{0}} = (1,0);
-        @{$h{RepeatProteinMask}{0}} = (1,0);
-        @{$h{RepeatModeler}{0}} = (1,0);
-        @{$h{TRF}{0}} = (1,0);
         
         if($line[3] =~ /RepeatMasker/){
             push @{$h{RepeatMasker}{$count}},($line[1],$line[2]);
