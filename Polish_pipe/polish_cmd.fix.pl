@@ -32,6 +32,7 @@ foreach (keys %config){
     switch($_){
         case "genome" {
 	       die"must have a path to draft genome\n" if ($config{genome} eq "a" );
+	       $config{genome} = abs_path("$config{genome}");
 	      }
           case "correct" { if (($config{correct}) eq "a") {
               print STDERR "\n\n\n\nyou don't have long reads, just run Pilon\n\n\n\n";
