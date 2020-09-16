@@ -1,4 +1,4 @@
-#ipeline for Circos
+pipeline for Circos
 
 grep '>' $genome.fa | perl -ple 'print if s/>//' >  0.Chrlist.txt
 #then manual fix '0.Chrlist.txt'
