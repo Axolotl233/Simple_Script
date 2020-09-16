@@ -19,7 +19,7 @@ while(my $seq_obj = $seqio_obj -> next_seq){
             my $start = ($count * $window)+1;
             my $end = (($count+1) * $window);
             my $line = substr($seq,$start,$window);
-            $count2 = $line =~ s/(G|C)/N/g;
+            $count2 = $line =~ s/(G|C)/N/ig;
             print "$name\t".$start;
             print "\t".$end."\t";
             my $cg = ($count2*100)/$window;
@@ -31,7 +31,7 @@ while(my $seq_obj = $seqio_obj -> next_seq){
             my $start = ($count*$window)+1;
             my $end = $start+$length;
             my $line = substr($seq,$start,$length);
-            $count2 = $line =~s/[GC]/N/g;
+            $count2 = $line =~s/[GC]/N/ig;
             print "$name\t".$start;
             print "\t".($end)."\t";
             my $cg = ($count2*100)/$length;
