@@ -1,1 +1,0 @@
-simple stat snp info 
