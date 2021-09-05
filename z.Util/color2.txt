@@ -1,0 +1,10 @@
+a	#E89242
+b	#FABEBE
+c	#d3d3d3
+d	#bc80bd
+e	#8dd3c7
+f	#FAFD7C
+g	#FB6467
+h	#69C8EC
+j	#A6EEE6
+k	#BCF60C
