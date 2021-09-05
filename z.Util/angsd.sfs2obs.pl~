@@ -1,3 +1,0 @@
-use sfs2obs;
-my $num = shift;
-&conver_sfs2obs("anc.sfs",13, "anc.obs");
