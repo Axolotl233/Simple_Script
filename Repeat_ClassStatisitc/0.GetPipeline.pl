@@ -7,7 +7,7 @@ if(!$ARGV[0]){
     exit;
 }
 if($ARGV[0] eq "step1"){
-    if(scalar $ARGV != 3){
+    if(scalar @ARGV != 3){
         print STDERR "USAGE : perl $0 step1 \$threads \$genome_size\n";
         exit;
     }
@@ -23,7 +23,7 @@ if($ARGV[0] eq "step1"){
 }
 
 if ($ARGV[1] eq "step2"){
-    if(scalar $ARGV != 4){
+    if(scalar @ARGV != 4){
         print STDERR "USAGE : perl $0 step2 \$threads \$genome_size \$repeat_size\n";
         exit;
     }
