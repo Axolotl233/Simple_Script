@@ -22,7 +22,7 @@ if($ARGV[0] eq "step1"){
     print STDERR "====>\nplease run \`sh 0.step1.sh`\n====>\n";
 }
 
-if ($ARGV[1] eq "step2"){
+if ($ARGV[0] eq "step2"){
     if(scalar @ARGV != 4){
         print STDERR "USAGE : perl $0 step2 \$threads \$genome_size \$repeat_size\n";
         exit;
