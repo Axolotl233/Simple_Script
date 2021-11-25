@@ -49,7 +49,7 @@ sub res_get{
     my %h = %{$ref};
     my $t_len = 0;
     for my $k1 (keys %h){
-        $t_len = ${$h{$k1}}[1] - ${$h{$k1}}[0] + $t_len + 1;
+        $t_len = ${$h{$k1}}[1] - ${$h{$k1}}[0] + $t_len;
     }
     return $t_len;
 }
