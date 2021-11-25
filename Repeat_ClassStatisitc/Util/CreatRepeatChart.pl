@@ -71,7 +71,7 @@ sub print_res{
     my $p = shift @_;
 
     for my $k1 (keys %h){
-        $t_len = ${$h{$k1}}[1] - ${$h{$k1}}[0] + $t_len + 1;
+        $t_len = ${$h{$k1}}[1] - ${$h{$k1}}[0] + $t_len;
     }
     if($p == 1){
         return "$t_len";
