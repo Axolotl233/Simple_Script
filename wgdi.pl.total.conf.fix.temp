@@ -67,7 +67,7 @@ genome1_name = species_first
 genome2_name = species_second
 blockinfo = species_first-species_second.blockinfo.csv
 pvalue = 0.05
-tandem = true
+tandem = false
 markersize = 1
 area = 0,2
 block_length = 10
@@ -89,7 +89,7 @@ savefile = species_first-species_second.correspondece.csv
 
 [kspeaks]
 blockinfo = species_first-species_second.blockinfo.csv
-pvalue = 0.05
+pvalue = 0.2
 tandem = true
 block_length = 10
 ks_area = 0,10

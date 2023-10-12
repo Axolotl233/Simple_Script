@@ -20,7 +20,7 @@ GetOptions(
            'config=s' => \$config,
            'threads=s' => \$threads
                      );
-$threads //= 4;
+$threads //= 10;
 $out_dir //= "./";
 unless (($config)){
     &print_help;
@@ -34,7 +34,7 @@ open O,'>',"0.Snp_filter.v2.run.sh";
 print O "perl $script_dir/vcf_filter.split.vcf.pl $config{Raw_vcf} $out_dir/split_vcf\n";
 
 if($step[0] && $step[1]){
-    print O "perl $script_dir/vcf_filter.depth_gq.pl $out_dir/split_vcf -d $config{Sample_max},$config{Sample_min} -g $config{GQ_therehold} -t $threads -r $config{Bamdst}\n";
+    print O "perl $script_dir/vcf_filter.depth_gq.pl $out_dir/split_vcf -d $config{Sample_max},$config{Sample_min} -g $config{GQ_therehold} -t $threads -r $config{Stat} -m $config{StatMethod}\n";
 }elsif($step[0] && !$step[1]){
     print O "perl $script_dir/vcf_filter.depth_gq.pl $out_dir/split_vcf -d $config{Sample_max},$config{Sample_min} -t $threads -r $config{Bamdst}\n";
 }elsif(!$step[0] && $step[1]){

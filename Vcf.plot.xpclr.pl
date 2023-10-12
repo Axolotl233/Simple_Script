@@ -25,11 +25,12 @@ for my $s ($xpclr,$chr){
 }
 my $out = $xpclr.".phase";
 my $cut = 10;
-my $coord = 200;
+
 $color //= "/data/00/user/user112/code/script/z.Util/color.txt";
 $arg_d //= 200;
 $plot_windth //= 8;
 $plot_height //= 2.5;
+
 my $plot_height2 = $plot_height * 2;
 my %color_hash = &get_color($color);
 my %chr_hash = &get_chr($chr);
@@ -40,10 +41,11 @@ my @b;
 for my $e(@a){
     push @b, "\"$color_hash{$e}\"";
 }
+
 my $c1 = -1;
 my $c2 = 0;
-my $s_coord = $coord;
-
+my $interval = 1;
+my $coord = 0;
 
 open IN,'<',$xpclr;
 readline IN;
@@ -57,7 +59,7 @@ while(<IN>){
     if(scalar @l < 12){
         push @l,(0,0);
     }
-    my @t = @l[0,1,2,9,11];
+    my @t = @l[0,1,2,9,10,11];
     $t[4] = 0 if $t[4] < 0;
     my $a = join"\t",@t;
     if ($last ne $l[0]){
@@ -65,6 +67,12 @@ while(<IN>){
         if($c1 == ((scalar @a) - 1)){
             $c1 = -1;
         }
+        if ($coord == 0){
+            $coord += $interval;
+        }else{
+            $coord += (2* $interval);
+        }
+        $c2 += (2*$interval) + 1;
         push @chr_name,$l[0];
         push @chr_coord,$c2;
         $c2 = 0;
@@ -76,10 +84,11 @@ while(<IN>){
     $coord += 1;
     $c2 += 1;
 }
-close IN;
+$c2 += (2*$interval) + 1;
 push @chr_coord, $c2;
 shift @chr_coord;
 close O;
+
 @chr_coord = &cal_coord(\@chr_coord);
 #map{$_ = "\"$_\""} @chr_coord;
 map{$_ = "\"$_\""} @chr_name;
@@ -109,8 +118,8 @@ sub plot{
 library(ggplot2)
 library(tidyverse)
 data <- read.table(\"$file\")
-data[,8] = c(\"t\")
-colnames(data) <- c(\"chr\",\"start\",\"end\",\"var_num\",\"xpclr\",\"class\",\"s\",\"li\")
+data[,9] = c(\"t\")
+colnames(data) <- c(\"chr\",\"start\",\"end\",\"var_num\",\"xpclr\",\"norm_xpclr\",\"class\",\"s\",\"li\")
 data\$group <- findInterval(data\$var_num,seq(1,".$c3.",1))
 res <- data.frame(i = seq(1,".$c4.",1),s = 0,r=0)
 a_s <- sum(data\$var_num)
@@ -296,16 +305,16 @@ ggsave(\"$f.point.logp.pdf\",b,width = 12,height = 5)";
     `Rscript $f.R`;
     close R;
 }
+
 sub cal_coord{
     my $ref = shift @_;
-    my @a = @{$ref};
+    my @a = @{$ref} ;#coord;
     my @new;
     for(my $i = 0;$i < @a;$i+=1){
         my @tmp_a = @a[0..$i];
-        @tmp_a = map {$_-$s_coord} @tmp_a;
         my $sum = sum(@tmp_a);
         my $tmp_s = int($a[$i]/2);
-        $tmp_s = $sum - $tmp_s + (($i+2) * $s_coord);
+        $tmp_s = $sum - $tmp_s;
         push @new, $tmp_s;
     }
     return @new;

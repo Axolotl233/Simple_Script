@@ -4,19 +4,21 @@ use Cwd qw(getcwd abs_path);
 use strict;
 use warnings;
 
+
 #my @sps=("Aco-Aco","Tar-Tar","Tsi-Tsi","Vvi-Vvi","Aco-Tar","Aco-Tsi","Aco-Vvi","Tar-Tsi","Tar-Vvi","Tsi-Vvi");
 #my @sps=("Aco-Aco","Aco-Tar","Aco-Tsi","Aco-Vvi");
 #my @sps=("Nnu-Nnu","Aco-Nnu","Nnu-Tar","Nnu-Tsi","Nnu-Vvi");
 #my @sps=("Nnu-Tsi","Aco-Tsi","Tar-Tsi","Tsi-Vvi","Tsi-Tsi");
 #my @sps=("Rlu-Aar");
-my @sps=("Bsta-Bsta");
+my @sps=("BhD-BhS");
 my $dir = shift;
+my $h_dir =getcwd();
 $dir //= "/data/01/user112/project/Brachypodium/07.pre_evo/01.wgdi/data";
 $dir = abs_path($dir);
 my $config = "/data/00/user/user112/code/script/wgdi.pl.total.conf.fix.temp";
 #my $dir="/data/01/user112/project/Brachypodium/07.pre_evo/01.wgdi/data";
 for my $sps (@sps){
-    open (SH,">$0.$sps.run.sh");
+    open (SH,">$h_dir/$sps.run.sh");
     `rm -r $sps` if (-e "$sps");
     `mkdir $sps` if (! -e "$sps");
     $sps=~/^(\w+)-(\w+)$/ or die "$sps";
@@ -32,7 +34,7 @@ for my $sps (@sps){
         `cd $sps ; cat $sp1.wgdi.pep $sp2.wgdi.pep > All.pep ; cd ../` if (! -e "$sps/All.pep");
     }
     open (O,">$sps/total.conf")||die"$!";
-    open (F,"")||die"$!";
+    open (F,$config)||die"$!";
     while (<F>){
         s/species_first/$sp1/;
         s/species_second/$sp2/;
@@ -49,7 +51,8 @@ wgdi -bi total.conf;
 wgdi -c total.conf;
 wgdi -bk total.conf;
 wgdi -kp total.conf;
-wgdi -pf total.conf
+wgdi -pf total.conf;
+wgdi -a total.conf;
 cd ../;\n";
     close SH;
 }

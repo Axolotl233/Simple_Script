@@ -4,13 +4,24 @@ use warnings;
 use strict;
 use Bio::SeqIO;
 use List::Util qw (sum max min);
+use Getopt::Long;
+use File::Basename;
 
-my $file = shift or die "USAGE : perl $0 seq_file [c:contig_level] [Nxx?]\n";
-my $stat = shift;
-my $level = shift;
+(my $stat,my $level,my $sp,my $NG);
+
+GetOptions(
+           'NG' => \$NG,
+           'stat=s' => \$stat,
+           'level=s' => \$level,
+           'sp=s' => \$sp
+          );
+
+my $file = $ARGV[0] or die "USAGE : perl $0 seq_file [--stat 50 --level s --NG]\n";
 
 $level //= "s";
+$level = "c" if $NG;
 $stat //=50;
+$sp //= "species";
 my @len;
 
 my $seqio_obj = Bio::SeqIO -> new (-file => $file, -format => "fasta", -alphabet => "dna");
@@ -39,6 +50,7 @@ while(my $seq_obj = $seqio_obj -> next_seq){
 }
 print STDERR"\n#############################\n";
 my $contig = scalar(@len);
+
 if($level eq "c"){
     print "contig_num\t$contig\n";
     print "gap_num\t$g_d\n";
@@ -57,11 +69,19 @@ print "\nmax\t$max_contig\n";
 print "min\t$min_contig\n";
 
 @len = sort {$b <=> $a} @len;
-#map {print "$_\n"}@len;exit;
 my @a = split/,/,$stat;
 map {&stats(\@len,$_,$total_len)} @a ;
-#&stats(\@len,90,$total_len);
 print STDERR "#############################\n";
+
+if($NG){
+    my @t = &calculate_NG($total_len,\@len);
+    my $name = basename $file;
+    open O,'>',$name.".NG.txt";
+    for my $e (@t){
+        print O join"\t",@{$e};
+        print O "\t$sp\n";
+    }
+}
 
 sub stats{
     my $contigs = shift @_;
@@ -79,5 +99,30 @@ sub stats{
             }
     }
     return;
+}
+sub calculate_NG{
+    #REF:https://academic.oup.com/gigascience/article/2/1/2047-217X-2-10/2656129?login=true
+    my $t = shift @_;
+    my $r = shift @_;
+    my @l = @{$r};
+    #print join"\n",@l;exit;
+    my @t_res;
+    my $t_sum = 0;
+    my $cum = 0;
+    my $i = 0;
+    my $per = 0;
+    my %h;
+    for my $e (@l){
+        $t_sum += $e;
+        $per = ($t_sum/$t)*100;
+        my $per2 = ($e/$t)*100;
+      DO:while($i < $per){
+            #push @{$h{$i}} , $e;
+            push @t_res, [$e,$per,$per2,$i];
+            $i += 1;
+        }
+        $i = int($per);
+    }
+    return @t_res;
 }
 __END__

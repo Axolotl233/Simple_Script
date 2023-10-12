@@ -40,8 +40,10 @@ for my $chr (sort keys %{$gff{gene}}){
         $out{gene}{num}++;
         my $genelen=$gff{gene}{$chr}{$geneid}{len};
         $out{gene}{len} += $genelen;
+        next if !exists $gff{gene}{$chr}{$geneid}{mrna};
         my @mrna=sort{$gff{gene}{$chr}{$geneid}{mrna}{$b}{len} <=> $gff{gene}{$chr}{$geneid}{mrna}{$a}{len}} keys %{$gff{gene}{$chr}{$geneid}{mrna}};
         my $mrna=$mrna[0];
+        next if !exists $gff{cds}{$chr}{$mrna};
         my @start=sort{$a<=>$b} keys %{$gff{cds}{$chr}{$mrna}};
         if (scalar(@start) == 1){
             $out{cds}{num} ++;
@@ -58,6 +60,7 @@ for my $chr (sort keys %{$gff{gene}}){
 	}
             }
         }else{
+            next;
             die "$chr\t$geneid\t:no cds\n";
         }
     }

@@ -22,7 +22,7 @@ sub get_gene{
         chomp;
         my @a=split(/\s+/,$_);
         if ($a[2] eq 'mRNA'){
-            my $s = ($a[3] - $ex < 0)? 0 : $a[3] - 2000;
+            my $s = ($a[3] - $ex < 0)? 0 : $a[3] - $ex;
             my $e = $a[4] + $ex;
             $a[8]=~/ID=([^;]+);.*?;?Parent=([^;]+)/;
             print O "$a[0]\t$2\t$1\t$s-$e\n";
@@ -53,13 +53,16 @@ sub get_cds{
     for my $chr (sort keys %{$gff{gene}}){
         for my $gene (sort keys %{$gff{gene}{$chr}}){
             my @trans=sort{$gff{gene}{$chr}{$gene}{$b} <=> $gff{gene}{$chr}{$gene}{$a}} keys %{$gff{gene}{$chr}{$gene}};
-        my $trans=$trans[0];
+            my $trans=$trans[0];
             print O "$chr\t$gene\t$trans\t";
             my @pos;
+            my $c = 0;
             for my $s (sort{$a<=>$b} keys %{$gff{CDS}{$trans}}){
 	push @pos,"$s-$gff{CDS}{$trans}{$s}";
+	$c = $c + $gff{CDS}{$trans}{$s} - $s;
             }
-            print O join(";",@pos),"\n";
+            print O join(";",@pos),"\t";
+            print O "$c\n";
         }
     }
     close O;

@@ -6,9 +6,16 @@ use strict;
 my $vcf = shift;
 my $out_dir = shift;
 $out_dir //= "0.split_vcf.out";
-open IN,"zcat $vcf |" or die "$!";
+my $fh;
+
+if($vcf =~ /\.gz$/){
+    open $fh,"zcat $vcf |" or die "$!";
+}else{
+    open $fh,'<',$vcf or die "$!";
+}
+
 my $head;
-while(<IN>){
+while(<$fh>){
     if(/^##/){
         $head .= $_;
     }elsif(/^#C/){
@@ -19,7 +26,7 @@ while(<IN>){
 my $con;
 my $chr = "NA";
 mkdir "$out_dir" if !-e "$out_dir";
-while(<IN>){
+while(<$fh>){
     my @line = split/\t/;
     if($chr ne "NA" && $chr ne $line[0]){
 		#mkdir "$out_dir/$chr" if ! -e "$out_dir/$chr";

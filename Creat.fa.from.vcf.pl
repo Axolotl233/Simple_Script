@@ -112,7 +112,7 @@ sub read_vcf_hap{
         for(my $i = 9;$i < @l;$i ++){
             my @q = split/:/,$l[$i];
             if ($q[0] =~/\.\/\./){
-                push @{$h{$head[$i]}{$l[0]}},("-","-");
+                push @{$h{$head[$i]}{$l[0]}},("N","N");
             }else{
                 $q[0] =~ /(\d+)\/(\d+)/;
                 (my $GT1,my $GT2) = ($1,$2);
@@ -139,7 +139,7 @@ sub read_vcf{
         my @base = split/,/,$tmp_base; # 0 for ref, 1.. for ale
         for(my $i = 9;$i< @l;$i += 1){
             if ($l[$i] =~ /^\.\/\./){
-                $h{$head[$i]}{$l[0]}{$l[1]} = "-";
+                $h{$head[$i]}{$l[0]}{$l[1]} = "N";
             }else{
                 my @info = split/:/,$l[$i];
                 $info[0] =~ /(\d+)\/(\d+)/;
@@ -147,7 +147,7 @@ sub read_vcf{
                 (my $dep_ref,my $dep_alt) = (split/,/,$info[1])[0,1];
                 if($dep_ref == $dep_alt){
                     if ($dep_ref == 0){
-                        $p="-";
+                        $p="N";
                         $h{$head[$i]}{$l[0]}{$l[1]} = $p;
                     }else{
                         my $jud = int(rand(100));

@@ -6,16 +6,19 @@ use PerlIO::gzip;
 use Cwd;
 
 my $h_dir = getcwd();
-print STDERR "perl $0 blast.out(tab split) /data/01/user112/database/nr/prot.accession2taxid.gz /data/01/user112/database/nr/names.dmp out.file.name\n";
+if (scalar @ARGV == 0){
+    print STDERR "perl $0 blast.out(tab split) /data/01/user112/database/nr/prot.accession2taxid.gz /data/01/user112/database/nr/names.dmp out.file.name\n";
+    exit;
+}
 
 my %h;
-open B,'<',shift;
+open B,'<',shift or die "$!";
 while(<B>){
     my $nr_p =(split/\t/,$_)[1];
     $h{$nr_p} = 1;
 }
 close B;
-open T,'<:gzip',shift;
+open T,'<:gzip',shift or die "$!";
 open E,'>',"$h_dir/GrepNameFormBlastOut.tmp";
 my %h2;
 while(<T>){

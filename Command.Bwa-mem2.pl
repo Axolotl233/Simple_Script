@@ -39,8 +39,12 @@ if($black_lst){
 
 mkdir $out_dir if !-e $out_dir;
 my @files;
+
 for my $dir (@in_dir){
-    my @t_file = sort{$a cmp $b} grep {/_1(\.|\_)(fq|fastq)(\.gz?)/} `find $dir`;
+    my @t_file = sort{$a cmp $b} grep {/_1(\.|\_)(fq|fastq)(\.[gz]?)/} `ls $dir`;
+    for(my $i = 0;$i < scalar @t_file;$i ++){
+        $t_file[$i] = "$dir\/$t_file[$i]";
+    }
     push @files , @t_file;
 }
 if(scalar @files == 0){
@@ -50,7 +54,7 @@ if(scalar @files == 0){
 
 foreach my $fastq1 (@files){
     chomp $fastq1;
-    $fastq1 = abs_path($fastq1);
+    #$fastq1 = abs_path($fastq1);
     my $r_dir = dirname $fastq1;
     (my $name = basename $fastq1) =~ s/(.*?)\_(.*)/$1/;
     next if exists $b{$name};

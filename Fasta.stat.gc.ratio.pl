@@ -14,7 +14,7 @@ GetOptions(
 my $f = shift or die "perl $0 fa\n";
 my @b = (0,0,0,0,0);
 my $oa = 0;
-print STDERR "id\tA\tT\tC\tG\tN\tGC\tother\n";
+print "id\tA\tT\tC\tG\tN\tGC\tother\n";
 my $s_obj = Bio::SeqIO -> new(-file => $f,-format => "fasta" );
 while(my $s_io = $s_obj->next_seq){
     my $id = $s_io -> display_id;
@@ -41,7 +41,7 @@ while(my $s_io = $s_obj->next_seq){
 }
 if(!$e){
     my $t = sum(@b);
-    for(my$i = 0; $i < @b;$i += 1){
+    for(my$i = 0;$i < @b;$i += 1){
         $b[$i] = ($b[$i]/$t)*100;
         $b[$i] = sprintf('%.04f',$b[$i]);
     }

@@ -7,13 +7,13 @@ use File::Basename;
 
 my $vcf = shift;
 if(!$vcf){
-    print STDERR "USAGE  :  perl $0 vcf [out_name maf geno mind hwe]\n";
+    print STDERR "USAGE  :  perl $0 vcf [out_name keep_sample_list maf geno mind hwe]\n";
     exit;
 }
-
 my $out = shift;
 (my $name = basename $vcf) =~ s/(.*?)\..*/$1/;
 $out //= $name;
+my $keep = shift;
 my $maf = shift;
 my $geno = shift;
 my $mind = shift;
@@ -23,9 +23,15 @@ $geno //= 0.05;
 $mind //= 0.05;
 $hwe //= 0.001;
 
-print "vcftools --gzvcf $vcf --plink --out $out
+if($keep){
+    print "vcftools --gzvcf $vcf --keep $keep  --plink --out $out";
+}else{
+    print "vcftools --gzvcf $vcf --plink --out $out";
+}
+print "
 plink --file $out --make-bed --out $out
 plink --bfile $out --maf $maf --geno $geno --mind $mind --hwe $hwe --make-bed --out $out.filter
 plink --noweb --bfile $out.filter --het --out $out
 mv $out.het 0.result.$out.het
-perl -i -ple 's/\\s+//' 0.result.$out.het";
+perl -i -ple 's/\\s+//' 0.result.$out.het\n";
+print "perl -i -nle \'if(/FID/){print \$_.\"\\tS\";}else{my \@l = split/\\s+/;my \$s = (2*\$l[-1])/(1+\$l[-1]);print \$_.\"\\t\$s\"};\' 0.result.$out.het";

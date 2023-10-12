@@ -67,7 +67,7 @@ sub run{
     }
     close $f_h;
     my $last = $r{$name};
-  DO:for(my $start = 0;$start < $last;$start += $step){
+  DO:for(my $start = 1;$start <= $last;$start += $step){
         my $jud = 0;
         my $c2 = 0;
         my $end = $start + $window;
@@ -86,7 +86,7 @@ sub run{
         unless(scalar(@tmp) == 0){
             my $mean = 0;
             if($abs){
-                 $mean = abs(sum(@tmp)/scalar(@tmp));
+	$mean = abs(sum(@tmp)/scalar(@tmp));
             }else{
                 $mean = (sum(@tmp)/scalar(@tmp));
             }

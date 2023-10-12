@@ -6,12 +6,13 @@ use MCE::Loop;
 use Getopt::Long;
 use File::Basename;
 
-(my $g,my $d,my $threads,my $depth_ref);
+(my $g,my $d,my $threads,my $depth_ref,my $method);
 GetOptions(
            'd=s' => \$d,
            'g=s' => \$g,
            't=s' => \$threads,
-           'r=s' => \$depth_ref
+           'r=s' => \$depth_ref,
+           'm=s' => \$method,
           );
 
 my $vcf_dir = shift or die "USAGE : perl $0 \$vcf_dir -d max,min -g min_gq -t threads -r dir contain res created by bamdst\n";
@@ -23,7 +24,11 @@ if($dp_min =~ /([0-9\w]+)\/([0-9\w]+)/){
 }
 
 my %dp;
-%dp = &get_dp ($depth_ref) if ($d && $depth_ref);
+if($method eq "Bamdst"){
+    %dp = &get_dp_bamdst ($depth_ref) if ($d && $depth_ref);
+}elsif($method eq "BamDeal"){
+    %dp = &get_dp_bamdeal ($depth_ref) if ($d && $depth_ref);
+}
 
 MCE::Loop::init {chunk_size => 1,max_workers => $threads};
 my @vcfs = sort{$a cmp $b} grep{/\.vcf$/} `find $vcf_dir`;
@@ -66,7 +71,7 @@ sub run{
     unlink $f;
 }
 
-sub get_dp{
+sub get_dp_bamdst{
     my $dir = shift @_;
     my %t;
     my @depth_f = grep{/chromosomes.report/}`find $dir`;
@@ -84,6 +89,24 @@ sub get_dp{
     }
     return %t;
 }
+sub get_dp_bamdeal{
+    my $dir = shift @_;
+    my %t;
+    my @depth_f = grep{/\.stat$/}`find $dir`;
+    chomp $_ for @depth_f;
+    for my $f (@depth_f){
+        (my $sample = basename dirname $f) =~ s/(.*?)\..*/$1/;
+        open IN,'<',$f;
+        readline IN;
+        while(<IN>){
+            next if /^#/;
+            my @l = split/\t/;
+            $t{$sample}{$l[0]} = $l[5];
+        }
+        close IN;
+    }
+    return %t;
+}
 sub get_head{
     my $f = shift @_;
     (my $h, my @hs);
@@ -94,7 +117,10 @@ sub get_head{
         }elsif(/^#C/){
             $h .= $_;
             @hs = split/\t/,$_;
-            chomp $_ for @hs;
+            for (@hs){
+	chomp $_;
+	$_ =~ s/\.\d+//;
+            }
             last;
         }
     }

@@ -30,6 +30,7 @@ for my $s ($bed,$window_file,$out){
 $window_length //= 10000;
 $extend_bp //= 2000;
 $value_line //= 4;
+my @value_lines = split/,/,$value_line;
 my %r;
 open R,'<',$bed or die "$!";
 while(<R>){
@@ -49,8 +50,11 @@ while(<IN>){
         my $s = ${$r{$line[0]}{$k2}}[0] - $extend_bp ;
         my $e = ${$r{$line[0]}{$k2}}[1] + $extend_bp ;
         my $gene_length = $e - $s;
-        my $v = $value_line;
-        my @p = ($line[0],$s,$e,$line[$v],$line[1],$line[2]);
+        my @v;
+        for my $t (@value_lines){
+            push @v,$line[$t];
+        }
+        my @p = ($line[0],$s,$e,(join"\t",@v),$line[1],$line[2]);
         my $c = 0;
         if ($e < $line[1]){
             next;
@@ -81,7 +85,7 @@ while(<IN>){
     }
 }
 open O,'>',"$out";
-print O "chr\tgene_s\tgene_e\tvalue\twindow_s\twindow_e\tclass\tper\n";
+#print O "chr\tgene_s\tgene_e\tvalue\twindow_s\twindow_e\tclass\tper\n";
 for my $k (sort {$a cmp $b} keys %h){
     for my $k2 (sort {$a cmp $b} keys %{$h{$k}}){
         my $p = join "\t", @{$h{$k}{$k2}};

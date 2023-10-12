@@ -1,0 +1,20 @@
+#! perl
+
+use warnings;
+use strict;
+
+my $vcf = shift;
+my $fh;
+if($vcf =~ /gz$/){
+    open ($fh, "zcat $vcf|");
+}else{
+    open $fh,'<',$vcf;
+}
+open F,"> 00.GetlocifromVCF.pl.loci.txt";
+while(<$fh>){
+    next if /^#/;
+    (my $chr,my $loc) = (split/\t/,$_)[0,1];
+    print F "$chr\t$loc\n";
+}
+close $fh;
+close F;

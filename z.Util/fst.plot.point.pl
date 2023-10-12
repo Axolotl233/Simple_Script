@@ -20,14 +20,16 @@ my @b;
 for my $e(@a){
     push @b, "\"$color_hash{$e}\"";
 }
+
 my $c1 = -1;
 my $c2 = 0;
-my $coord = 200;
-my $s_coord = $coord;
+my $interval = 1;### chr interval 
+my $coord = 0;
 
 open IN,'<',$f;
 open O,'>',$out;
 my $last = "NA";
+
 while(<IN>){
     chomp;
     my @l = (split/\t/,$_);
@@ -42,6 +44,12 @@ while(<IN>){
         if($c1 == ((scalar @a) - 1)){
             $c1 = -1;
         }
+        if ($coord == 0){
+            $coord += $interval;
+        }else{
+            $coord += (2* $interval);
+        }
+        $c2 += (2*$interval) + 1;
         push @chr_name,$l[0];
         push @chr_coord,$c2;
         $c2 = 0;
@@ -53,10 +61,13 @@ while(<IN>){
     $coord += 1;
     $c2 += 1;
 }
+$c2 += (2*$interval) + 1;
 push @chr_coord, $c2;
 shift @chr_coord;
 close O;
+
 @chr_coord = &cal_coord(\@chr_coord);
+
 #map{$_ = "\"$_\""} @chr_coord;
 map{$_ = "\"$_\""} @chr_name;
 my $cc = join",",@chr_coord;
@@ -97,7 +108,7 @@ f_mean <- mean(data\$w_fst)
 f_var <- var(data\$w_fst)
 line <- as.numeric(quantile(data\$w_fst,probs = c(0.99)))
 print (c(f_mean,f_var,line))
-datatop1 <- data[data\$w_fst > line,]
+datatop1 <- data[data\$w_fst >= line,]
 line <- as.numeric(quantile(data\$w_fst,probs = c(0.95)))
 datatop5 <- data[data\$w_fst > line,]
 write_tsv(\"$file.top1.fst\",x =datatop1)
@@ -109,14 +120,13 @@ write_tsv(\"$file.top5.fst\",x =datatop5)
 
 sub cal_coord{
     my $ref = shift @_;
-    my @a = @{$ref};
+    my @a = @{$ref} ;#coord;
     my @new;
     for(my $i = 0;$i < @a;$i+=1){
         my @tmp_a = @a[0..$i];
-        @tmp_a = map {$_-$s_coord} @tmp_a;
         my $sum = sum(@tmp_a);
         my $tmp_s = int($a[$i]/2);
-        $tmp_s = $sum - $tmp_s + (($i+2) * $s_coord);
+        $tmp_s = $sum - $tmp_s;
         push @new, $tmp_s;
     }
     return @new;

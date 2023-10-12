@@ -292,7 +292,8 @@ if (opt$similarity) {
     ylab("Query")
 }
 # gp
-ggsave(filename = paste0(opt$output_filename, ".png"), width = opt$plot_size, height = opt$plot_size, units = "in", dpi = 300, limitsize = F)
+t = opt$plot_size-1.5
+ggsave(filename = paste0(opt$output_filename, ".png"), width = opt$plot_size, height = t, units = "in", dpi = 300, limitsize = F)
 
 if(opt$interactive){
   pdf(NULL)

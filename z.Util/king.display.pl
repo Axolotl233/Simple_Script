@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 my $t = shift;
-$t //= 0.354;
+$t //= 0.0442;
 my %o; my %p;
 my $i = 0;
 open IN,'<',"king.kin0";

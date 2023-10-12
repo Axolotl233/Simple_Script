@@ -16,19 +16,21 @@ GetOptions(
            'pep=s' => \$pep,
           );
 $max //= 1;
-$i //= 0.6;
-$c //= 0.6;
-exit if (! $blast || ! $pep);
+$i //= 0.4;
+$c //= 0.4;
+if (! $blast || ! $pep){
+    print "USAGE : perl $0 --blast blast_res --pep query_pep [--max max_target[1] --cov seq_coverage[0.4] --ident seq_ident[0.4] --out out_file]";
+    exit;
+}
 my %len = &load_fasta($pep);
 my $name = basename $blast;
-$out = $name.".phase";
+$out //= $name.".phase";
 my %blast = %{&blast_load($blast)};
 open O,'>',$out;
 for my $k (sort {$a cmp $b} keys %blast){
     print O @{$blast{$k}};
 }
 close O;
-
 
 sub blast_load{
     my $f = shift @_;

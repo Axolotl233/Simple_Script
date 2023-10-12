@@ -16,9 +16,10 @@ if ($ARGV[0] eq "snpcall"){
 if ($ARGV[0] eq "fixsnp"){
     &fixsnp();
 }
+my $gatk = "/data/00/software/gatk/gatk-4.2.3.0/gatk";
 
 sub fixsnp{
-    my $gatk = "gatk";
+    #my $gatk = "gatk";
     my $pl = "/data/00/user/user112/code/script/GATK.remove.hdfilter.pl";
     my($ref,@in_dir,$out_dir,$threads,$cover);
     GetOptions(
@@ -41,18 +42,18 @@ sub fixsnp{
     }
     print O "$gatk --java-options \"-Xmx40g -Xms40g\" CombineGVCFs -R $ref";
     map{chomp($_);print O " -V ./$_"} @files;
-    print O " -o $out_dir/Pop.combined.g.vcf.gz\n";
-    print O "gatk --java-options \"-Xmx40g -Xms40g\" GenotypeGVCFs -R $ref -V $out_dir/Pop.combined.g.vcf.gz -O $out_dir/Pop.vcf.gz\n";
-    print O "gatk --java-options \"-Xmx40g -Xms40g\" SelectVariants -R $ref -V $out_dir/Pop.vcf.gz -select-type SNP -O $out_dir/Pop.SNP.vcf.gz\n";
-    print O "gatk --java-options \"-Xmx40g -Xms40g\" SelectVariants -R $ref -V $out_dir/Pop.vcf.gz -select-type INDEL -O $out_dir/Pop.INDEL.vcf.gz\n";
-    print O "gatk --java-options \"-Xmx40g -Xms40g\" VariantFiltration -R $ref -V $out_dir/Pop.SNP.vcf.gz  --filter-expression \"QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0\"  --filter-name \"my_snp_filter\" -O $out_dir/Pop.HDflt.SNP.vcf.gz
+    print O " -O $out_dir/Pop.combined.g.vcf.gz\n";
+    print O "$gatk --java-options \"-Xmx40g -Xms40g\" GenotypeGVCFs -R $ref -V $out_dir/Pop.combined.g.vcf.gz -O $out_dir/Pop.vcf.gz\n";
+    print O "$gatk --java-options \"-Xmx40g -Xms40g\" SelectVariants -R $ref -V $out_dir/Pop.vcf.gz -select-type SNP -O $out_dir/Pop.SNP.vcf.gz\n";
+    print O "$gatk --java-options \"-Xmx40g -Xms40g\" SelectVariants -R $ref -V $out_dir/Pop.vcf.gz -select-type INDEL -O $out_dir/Pop.INDEL.vcf.gz\n";
+    print O "$gatk --java-options \"-Xmx40g -Xms40g\" VariantFiltration -R $ref -V $out_dir/Pop.SNP.vcf.gz  --filter-expression \"QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0\"  --filter-name \"my_snp_filter\" -O $out_dir/Pop.HDflt.SNP.vcf.gz
 gatk --java-options \"-Xmx40g -Xms40g\" VariantFiltration -R $ref -V $out_dir/Pop.INDEL.vcf.gz --filter-expression \"QD < 2.0 || FS > 200.0 || ReadPosRankSum < -20.0\" --filter-name \"my_indel_filter\" -O $out_dir/Pop.HDflt.INDEL.vcf.gz
 perl $pl --input $out_dir/Pop.HDflt.SNP.vcf.gz --out $out_dir/Pop.HDflted.SNP.vcf.gz --type SNP --marker my_snp_filter --multi
 perl $pl --input $out_dir/Pop.HDflt.INDEL.vcf.gz --out $out_dir/Pop.HDflted.INDEL.vcf.gz --type INDEL --marker my_indel_filter\n"
 }
 
 sub snpcall{
-    my $gatk = "gatk";
+    #my $gatk = "gatk";
     my($ref,@in_dir,$out_dir,$threads,$cover,$method);
     GetOptions(
                'ref=s' => \$ref,
@@ -105,7 +106,7 @@ sub print_help1{
     Options:
       --out      defalut [./]
       --threads  defalut [10]
-      --cover
+      --cover    re-run if exists result
 
 ";
 }

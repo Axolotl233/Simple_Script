@@ -83,7 +83,7 @@ sub nj{
     open O,'>',"3.nj.sh";
     print O "plink --file $name --distance-matrix --out $out_dir/$name
 perl $script_dir/structure.mdist2phylip.pl $out_dir/$name.mdist $ped $out_dir/$name.out
-cd $out_dir ; /home/share/software/phylip/phylip-3.696/exe/neighbor < ../3.nj.$name.control.txt
+cd $out_dir ; /data/00/software/phylip/bin/neighbor < ../3.nj.$name.control.txt
 mv outfile $name.outfile
 mv outtree $name.outtree
 ";

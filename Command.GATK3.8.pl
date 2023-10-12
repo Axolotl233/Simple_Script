@@ -85,7 +85,10 @@ sub snpcall{
     open O,'>',"0.HaploteCaller.sh";
     foreach (@files) {
         chomp;
+        my $dir = dirname $_;
         (my $o_name = basename $_) =~ s/(.*?)\..*/$1/;
+        (my $bam_index = basename $_) =~ s/\.bam$/\.bai/;
+        next if !-e "$dir/$bam_index";
         if(!$cover){
             next if exists $c{$o_name};
         }

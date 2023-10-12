@@ -4,12 +4,13 @@ use warnings;
 use strict;
 use File::Basename;
 
-print STDERR "USAGE : perl $0 gff [0,1,2][0:all 1:mcscanx 2:mcscanx-python]\n";
+print STDERR "USAGE : perl $0 gff [0,1,2][0:all 1:mcscanx 2:mcscanx-python] [extend bp]\n";
 
 my $gff = shift or die "need gff\n";
 my $jud = shift;
+my $ex = shift;
 $jud //= 0;
-
+$ex //= 0;
 open IN,'<',$gff;
 my $m;
 my $mp;
@@ -23,6 +24,9 @@ while(<IN>){
     }else{
         $l[8] =~ s/ID=//;
     }
+    $l[3] = $l[3] - $ex;
+    $l[3] = 0 if $l[3]<0;
+    $l[4] = $l[4] + $ex;
     $m .= "$l[0]\t$l[8]\t$l[3]\t$l[4]\n";
     $mp .= "$l[0]\t$l[3]\t$l[4]\t$l[8]\t$l[6]\t$l[7]\n";
 }

@@ -24,7 +24,7 @@ for my $s ($dxy,$chr){
     }
 }
 my $out = $dxy.".phase";
-my $cut = 10;
+my $cut = 0;
 my $coord = 200;
 $color //= "/data/00/user/user112/code/script/z.Util/color.txt";
 $arg_d //= 200;

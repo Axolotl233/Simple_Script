@@ -26,6 +26,7 @@ sub get_head{
         if(/^##/){
             $h .= $_;
         }elsif(/^#C/){
+            s/\.\d+//g; 
             $h .= $_;
             last;
         }

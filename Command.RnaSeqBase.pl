@@ -35,7 +35,11 @@ sub hisat2{
     mkdir $out_dir if !-e $out_dir;
     my @files;
     for my $dir (@in_dir){
-        my @t_file = sort{$a cmp $b} grep {/_1(\.|\_)(fq|fastq)(\.gz?)/} `find $dir`;
+        $dir =  abs_path($dir);
+        my @t_file = sort{$a cmp $b} grep {/_1(\.|\_).*?(fq|fastq)(\.gz?)$/} `ls $dir`;
+        for my $t (@t_file){
+            $t = "$dir/$t";
+        }
         push @files , @t_file;
     }
     if(scalar @files == 0){
@@ -47,7 +51,7 @@ sub hisat2{
     open O1,'>',"0.hisat2.sh";
     foreach my $fastq1 (@files){
         chomp $fastq1;
-        $fastq1 = abs_path($fastq1);
+        #$fastq1 = abs_path($fastq1);
         my $r_dir = dirname $fastq1;
         (my $name = basename $fastq1) =~ s/(.*?)\_(.*)/$1/;
         (my $fastq2 = basename $fastq1) =~ s/\_1(\.|\_)/_2$1/;

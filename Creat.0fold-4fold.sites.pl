@@ -1,4 +1,3 @@
-# Created by WangKun
 #! perl
 use strict;
 use warnings;

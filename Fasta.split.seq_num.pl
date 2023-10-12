@@ -24,6 +24,12 @@ my $s_n = 0;
 while(my $s = $s_io -> next_seq){
     my $id = $s -> display_id;
     my $seq = $s -> seq;
+    if($item == 1){
+        open O,'>',"$id.fa";
+        print O">$id\n$seq\n";
+        close O;
+        next;
+    }
     $c += 1;
     $p .= ">$id\n$seq\n";
     if($c == ($d * $item)){
@@ -37,7 +43,10 @@ while(my $s = $s_io -> next_seq){
         
     }
 }
-my $last = $e_n + 1;
-open O,'>',"$name.$last-$c.fa";
-print O $p;
-close O;
+unless($item == 1){
+    my $last = $e_n + 1;
+    open O,'>',"$name.$last-$c.fa";
+    print O $p;
+    close O;
+
+}

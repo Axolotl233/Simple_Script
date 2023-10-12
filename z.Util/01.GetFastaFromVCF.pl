@@ -12,12 +12,18 @@ while(<R>){
 }
 close R;
 my $vcf = shift;
-open IN,"zcat $vcf |" or die "$!";
+my $fh;
+if($vcf =~ /gz$/){
+    open ($fh, "zcat $vcf|");
+}else{
+    open $fh,'<',$vcf;
+}
+#open IN,"zcat $vcf |" or die "$!";
 my @head;push @head, 0..8;
 my %fa;
 srand(time());
 
-while(<IN>){
+while(<$fh>){
     next if /^##/;
     chomp;
     if(/^#C/){
@@ -72,9 +78,11 @@ while(<IN>){
         }
     }
 }
+close $fh;
 my $n = basename $0;
 open O,'>',"$n.SNPtandem.fa";
 for my $sam (sort keys %fa){
     my $a = join"",@{$fa{$sam}};
     print O "\>$sam\n"."$a\n";
 }
+close O;

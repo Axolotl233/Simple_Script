@@ -16,9 +16,15 @@ $prefix //= "Pop";
 my %h;
 mkdir ("$prefix.stat.out") if ! (-e "$prefix.stat.out");
 my @head;
-open IN, "zcat $vcf |" or die "$!";
+my $fh;
 
-while(<IN>){
+if($vcf =~ /gz$/){
+    open $fh, "zcat $vcf |" or die "$!";
+}else{
+    open $fh,'<',$vcf;
+}
+
+while(<$fh>){
     if(/^##/){
         next;
     }if(/^#C/){
@@ -27,7 +33,7 @@ while(<IN>){
         last;
     }
 }
-while(<IN>){
+while(<$fh>){
     my @l = split/\t/;
     for (my $i = 9;$i < @l;$i+=1){
         my @a = split/\:/,$l[$i];
@@ -46,7 +52,7 @@ while(<IN>){
     }
 }
 
-close IN;
+close $fh;
 my %o;
 chdir ("$prefix.stat.out");
 for my $k(sort {$a cmp $b} keys %h){
